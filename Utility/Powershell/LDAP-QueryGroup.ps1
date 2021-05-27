@@ -6,4 +6,6 @@ $props = "name","distinguishedname","member"
 foreach($item in $props){
 $searcher.propertiestoload.add($item) | out-null
 }
-$searcher.findall()
+$capture = $searcher.findall()
+$displayresults =  $capture.Properties;$displayresults.name
+$displayresults
