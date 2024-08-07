@@ -1,5 +1,5 @@
 #Script will set a folder to Read only, It will break inheritance to achieve the goal
-#requires PnP Powershell and the M365 Tenant to Consent to PnP.Powershell App https://pnp.github.io/powershell/cmdlets/Register-PnPManagementShellAccess.html
+# requires PnP Powershell and the M365 Tenant to Consent to PnP.Powershell App https://pnp.github.io/powershell/cmdlets/Register-PnPManagementShellAccess.html
 #Script has no paramaters and will ask you to type in the Site, List and the folder itself
 #Script can be edited to use other permissions such as contribute
 #Contributing Articles: 
