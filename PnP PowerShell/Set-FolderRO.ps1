@@ -1,6 +1,7 @@
 #Script will set a folder to Read only, It will break inheritance to achieve the goal
 # requires PnP Powershell and the M365 Tenant to Consent to PnP.Powershell App https://pnp.github.io/powershell/cmdlets/Register-PnPManagementShellAccess.html
 #Script has no paramaters and will ask you to type in the Site, List and the folder itself
+#Script will output two files, Folder Permissions (post broken Inheritance) & a Logfile into the current working folder path
 #Script can be edited to use other permissions such as contribute
 #Contributing Articles: 
 #https://www.sharepointdiary.com/2018/03/sharepoint-online-powershell-to-get-folder-permissions.html
@@ -179,6 +180,8 @@ Function Get-PnPPermissions([Microsoft.SharePoint.Client.SecurableObject]$Object
                     $Permissions | Add-Member NoteProperty Type($PermissionType)
                     $Permissions | Add-Member NoteProperty Permissions($PermissionLevels)
                     $Permissions | Add-Member NoteProperty GrantedThrough("SharePoint Group: $($RoleAssignment.Member.LoginName)")
+                    $Permissions | Add-Member NoteProperty FolderPath($folder.ServerRelativeUrl)
+                    $Permissions | Add-Member NoteProperty Domain($spo.split("/")[2])            
                     $Script:PermissionCollection += $Permissions
                 }
             }
@@ -191,11 +194,13 @@ Function Get-PnPPermissions([Microsoft.SharePoint.Client.SecurableObject]$Object
                 $Permissions | Add-Member NoteProperty Type($PermissionType)
                 $Permissions | Add-Member NoteProperty Permissions($PermissionLevels)
                 $Permissions | Add-Member NoteProperty GrantedThrough("Direct Permissions")
+                $Permissions | Add-Member NoteProperty FolderPath($folder.ServerRelativeUrl)
+                $Permissions | Add-Member NoteProperty Domain($spo.split("/")[2])            
                 $SCript:PermissionCollection += $Permissions
             }
         }
         #cleanup Permissions Report
-        $script:PermissionCollection = $script:PermissionCollection | select -Unique login,permissions,type
+        $script:PermissionCollection = $script:PermissionCollection | select -Unique login,permissions,type,path,domain
         $script:PermissionCollection| %{If($_.login -like "*@*"){$_.login = $_.login.split('|')[2]}}
         #Export Permissions to CSV File
         $PermissionCollection | Export-CSV "FolderPermissionRpt_$(get-timestamp).csv" -NoTypeInformation
