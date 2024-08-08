@@ -200,7 +200,7 @@ Function Get-PnPPermissions([Microsoft.SharePoint.Client.SecurableObject]$Object
             }
         }
         #cleanup Permissions Report
-        $script:PermissionCollection = $script:PermissionCollection | select -Unique login,permissions,type,path,domain
+        $script:PermissionCollection = $script:PermissionCollection | select -Unique login,permissions,type,folderpath,domain
         $script:PermissionCollection| %{If($_.login -like "*@*"){$_.login = $_.login.split('|')[2]}}
         #Export Permissions to CSV File
         $PermissionCollection | Export-CSV "FolderPermissionRpt_$(get-timestamp).csv" -NoTypeInformation
